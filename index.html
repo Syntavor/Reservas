@@ -332,7 +332,11 @@ addEventListener('beforeunload', () => { if (S.mine) API.release(S.mine, S.mineH
 $('#form').onsubmit = async e => {
   e.preventDefault();
   const f = Object.fromEntries(new FormData(e.target));
-  f.fecha = S.sinFecha ? '' : S.mine; f.hora = S.sinFecha ? '' : S.mineH; f.mes = S.sinFecha ? (f.mes || '') : ''; f.celular = normPhone(f.celular);
+  f.fecha = S.sinFecha ? '' : S.mine; f.hora = S.sinFecha ? '' : S.mineH;
+  // El input type=month entrega YYYY-MM. La base espera date: guardamos el día 1.
+  f.mes_tentativo = S.sinFecha && f.mes ? `${f.mes}-01` : '';
+  delete f.mes;
+  f.celular = normPhone(f.celular);
   if (f.celular.length < 11) { $('#err').textContent = 'Revisa el celular: incluye c\u00F3digo de pa\u00EDs.'; return; }
   $('#ok').disabled = true;
   try {

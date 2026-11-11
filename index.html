@@ -8,6 +8,7 @@
 <script src="https://cdn.tailwindcss.com/3.4.17"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="config.js"></script>
 <style>
 :root{--bg:#fbf5ee;--bg2:#f4e6e1;--card:#fffdf9;--ink:#472317;--soft:#8a6f66;--blush:#ECC7C6;--rose-d:#E36DA1;--rose:#AB2270;--gold:#A67236;--line:#ecdcd0}
 body{font-family:Jost,sans-serif;background:radial-gradient(120% 60% at 50% -10%,var(--bg2),var(--bg) 60%) fixed;color:var(--ink)}
@@ -156,8 +157,8 @@ const CONFIG = {
   MAX_POR_DIA: 6,              // maximo de eventos por dia (igual que en la base de datos)
   RECORDAR_SESION: true,       // true = no pide contrase\u00F1a en ese navegador; false = la pide al cerrar el navegador
   LOCK_MIN: 5,                 // minutos de bloqueo temporal (igual que schema.sql)
-  SUPABASE_URL: '',            // Project URL de Supabase (Project Settings > API)
-  SUPABASE_KEY: ''             // clave publica (anon / publishable). Nunca la service_role
+  SUPABASE_URL: (window.APP_CONFIG || {}).SUPABASE_URL || '',            // Project URL de Supabase (Project Settings > API)
+  SUPABASE_KEY: (window.APP_CONFIG || {}).SUPABASE_KEY || ''             // clave publica (anon / publishable). Nunca la service_role
 };
 
 const $ = s => document.querySelector(s);
@@ -494,7 +495,7 @@ $('#loginForm').onsubmit = async e => {
 };
 (async () => {
   if (!CONFIG.SUPABASE_URL || !CONFIG.SUPABASE_KEY) {
-    $('#lgErr').textContent = 'Falta configurar SUPABASE_URL y SUPABASE_KEY en index.html.';
+    $('#lgErr').textContent = 'Falta configurar SUPABASE_URL y SUPABASE_KEY en config.js.';
     $('#loginForm button').disabled = true; return;
   }
   const u = await API.init(); if (u) start(u);
